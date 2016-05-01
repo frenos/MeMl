@@ -20,7 +20,7 @@ class Korpus(object):
             Korpus.rueckw = new_Activity
         elif name is 'stehen':
             Korpus.stehen = new_Activity
-        elif name is ' treppe':
+        elif name is 'treppe':
             Korpus.treppe = new_Activity
 
         Korpus.activity.append(new_Activity)
