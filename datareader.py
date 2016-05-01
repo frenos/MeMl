@@ -1,4 +1,5 @@
 import numpy as np
+import pandas as pd
 import os
 from Korpus import Korpus
 
@@ -16,7 +17,7 @@ def read():
     for file in os.listdir('./daten'):
         for activity in aktivitaeten:
             if file.startswith(activity) and not file.endswith('.ini'):
-                datafiles[activity].append(np.recfromcsv('./daten/%s'%(file), names=True))
+                datafiles[activity].append(pd.read_csv('./daten/%s'%(file)))
 
     create_Korpus(datafiles)
 

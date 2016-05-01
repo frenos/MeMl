@@ -6,15 +6,16 @@ def mittelwertGesamt(daten):
     wir nehmen immer timestamp|values an.
     '''
     sum = 0
-    for value in daten:
+    for value in daten.values:
         sum += value[1]
     mittelwert = sum / len(daten)
     return mittelwert
 
-
 datareader.read()
 
-mydata = Korpus.gehen.subjects[0].get_accelX("oberschenkel")
+mydata = Korpus.gehen.subjects[0].get_accelY("oberschenkel")
+print(mydata['accelY (m/s^2)'].mean())
 print(mittelwertGesamt(mydata))
-mydata = Korpus.joggen.subjects[0].get_accelX("oberschenkel")
+mydata = Korpus.joggen.subjects[0].get_accelY("oberschenkel")
 print(mittelwertGesamt(mydata))
+print(mydata['accelY (m/s^2)'].mean())
