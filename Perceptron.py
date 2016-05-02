@@ -12,8 +12,6 @@ class Perceptron:
             self.weight = np.zeros(self.len_feature_vec)
 
             self.X = self.parseData(train_data)
-
-            print(self.X)
         else:
             raise Exception('train_data with size 0')
 
@@ -52,7 +50,7 @@ class Perceptron:
 
         return False
 
-    def getRandoooooooomFailure(self, weight):
+    def getRandomFailure(self, weight):
         pts = self.X
         mispts = []
 
@@ -68,7 +66,7 @@ class Perceptron:
         while it < max_iter:
             it += 1
 
-            feature, result = self.getRandoooooooomFailure(weight)
+            feature, result = self.getRandomFailure(weight)
 
             weight += result * feature
 
@@ -91,7 +89,7 @@ class Perceptron:
         while it < max_iter:
             it += 1
 
-            feature, result = self.getRandoooooooomFailure(current_weight)
+            feature, result = self.getRandomFailure(current_weight)
 
             new_weight += result * feature
 
@@ -106,17 +104,53 @@ class Perceptron:
 
         self.weight = current_weight
 
-        if it < max_iter:
-            print('ALLET KLAR BEIM POCKET!')
 
-train = np.array([[2, 6, 1], [7, 4, -1], [7, -2, -1], [7, 3, -1], [9, 6, 1], [3, 6, 1], [7, 1, -1]])
 
-p = Perceptron(train_data=train)
-p.pla(10)
-print(p.weight)
-p.pocket(10)
-print(p.weight)
-result = p.check(p.weight, np.array([7, 6, -1]))
-if result is True:
-    print('YOKO')
+def test1():
+    print("### ERSTER TEST MIT 3"
+          " MERKMALEN ###")
+    train1 = np.array([[2, 6, 1], [7, 4, -1], [7, -2, -1], [7, 3, -1], [9, 6, 1], [3, 6, 1], [7, 1, -1]])
+    p = Perceptron(train_data=train1)
 
+    p.pla(10)
+    print(p.weight)
+    result = p.check(p.weight, np.array([9, 1, -1]))
+    if result is True:
+        print('TEST PLA OK\n')
+    else:
+        print('TEST PLA FEHLSCHLAG\n')
+
+    p.pocket(10)
+    print(p.weight)
+    result = p.check(p.weight, np.array([1, 5, 1]))
+    if result is True:
+        print('TEST POCKET OK\n')
+    else:
+        print('TEST POCKET FEHLSCHLAG\n')
+
+
+def test2():
+    print("### ERSTER TEST MIT 2 MERKMALEN ###")
+    
+    train2 = np.array([[5, 1], [7, -1], [9, -1], [7, -1], [3, 1], [2, 1], [8, -1]])
+    p = Perceptron(train_data=train2)
+
+    p.pla(10)
+    print(p.weight)
+    result = p.check(p.weight, np.array([9, -1]))
+    if result is True:
+        print('TEST PLA OK\n')
+    else:
+        print('TEST PLA FEHLSCHLAG')
+
+    p.pocket(10)
+    print(p.weight)
+    result = p.check(p.weight, np.array([1, 1]))
+    if result is True:
+        print('TEST POCKET OK')
+    else:
+        print('TEST POCKET FEHLSCHLAG')
+
+
+test1()
+test2()
