@@ -14,7 +14,7 @@ def read():
         'treppe' : []
     }
 
-    for file in os.listdir('./daten'):
+    for file in sorted(os.listdir('./daten')):
         for activity in aktivitaeten:
             if file.startswith(activity) and not file.endswith('.ini'):
                 datafiles[activity].append(pd.read_csv('./daten/%s'%(file)))
