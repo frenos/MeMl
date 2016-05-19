@@ -35,7 +35,11 @@ class Perceptron:
         return error
 
     def classify(self, weight, x):
-        return int(np.sign(weight.T.dot(x)))
+        value = int(np.sign(weight.T.dot(x)))
+        return value
+
+    def check_no_Weight(self,x):
+        return self.check(self.weight,x)
 
     def check(self, weight, x):
 
@@ -69,6 +73,8 @@ class Perceptron:
             feature, result = self.getRandomFailure(weight)
 
             weight += result * feature
+            print('Durchlauf: '+str(it))
+            print(weight)
 
             error = self.classification_error(weight)
 
@@ -82,27 +88,31 @@ class Perceptron:
 
     def pocket(self, max_iter):
         current_weight = np.zeros(self.len_feature_vec)
-        new_weight = current_weight
+        new_weight = current_weight.copy()
         current_error = self.classification_error(current_weight)
         it = 0
 
         while it < max_iter:
             it += 1
 
-            feature, result = self.getRandomFailure(current_weight)
+            feature, result = self.getRandomFailure(new_weight)
 
-            new_weight += result * feature
+            new_weight =  new_weight.copy() + (result * feature)
+            print('Durchlauf: ' + str(it))
+            print(new_weight)
+            print(current_weight)
 
             new_error = self.classification_error(new_weight)
-
+            print(new_error)
+            print(current_error)
             if new_error < current_error:
-                current_weight = new_weight
+                current_weight = new_weight.copy()
                 current_error = new_error
 
             if current_error == 0:
                 break
 
-        self.weight = current_weight
+        self.weight = current_weight.copy()
 
 
 
@@ -152,5 +162,5 @@ def test2():
         print('TEST POCKET FEHLSCHLAG')
 
 
-test1()
-test2()
+#test1()
+#test2()
