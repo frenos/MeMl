@@ -1,17 +1,28 @@
 import numpy as np
 import random
+import matplotlib.pyplot as plt
+import signal
+import sys
+import time
 
 
 class Perceptron:
-    def __init__(self, train_data):
+    def __init__(self, train_data, test):
         self.len_train_data = len(train_data)
-
+        self.test = test
         if self.len_train_data > 0:
             self.len_feature_vec = len(train_data[0])
 
             self.weight = np.zeros(self.len_feature_vec)
 
-            self.X = self.parseData(train_data)
+            if test is True:
+                xA, yA, xB, yB = [random.uniform(-1, 1) for i in range(4)]
+                self.V = np.array([xB * yA - xA * yB, yB - yA, xA - xB])
+                self.X = self.generate_points(20)
+                self.test_points = self.generate_points(500)
+            else:
+                self.X = self.parseData(train_data)
+
         else:
             raise Exception('train_data with size 0')
 
@@ -25,6 +36,16 @@ class Perceptron:
         for feature_vec, result in zip(train_data, result_vec):
             X.append((feature_vec, result[0]))
 
+        return X
+
+    def generate_points(self, N):
+        X = []
+
+        for i in range(N):
+            x1, x2 = [random.uniform(-10, 10) for i in range(2)]
+            x = np.array([1, x1, x2])
+            s = int(np.sign(self.V.T.dot(x)))
+            X.append((x, s))
         return X
 
     def classification_error(self, weight):
@@ -64,6 +85,7 @@ class Perceptron:
         return mispts[random.randrange(0, len(mispts))]
 
     def pla(self, max_iter):
+        plt.show()
         weight = np.zeros(self.len_feature_vec)
         it = 0
 
@@ -75,7 +97,7 @@ class Perceptron:
             weight += result * feature
             print('Durchlauf: '+str(it))
             print(weight)
-
+            self.plot(mispts=self.test_points,vec=weight)
             error = self.classification_error(weight)
 
             if error == 0:
@@ -114,13 +136,48 @@ class Perceptron:
 
         self.weight = current_weight.copy()
 
+    def plot(self, mispts=None, vec=None, save=False):
+        fig = plt.figure(figsize=(5, 5))
+        plt.xlim(-10, 10)
+        plt.ylim(-10, 10)
+
+        if self.test is True:
+            V = self.V
+            a, b = -V[1] / V[2], -V[0] / V[2]
+            l = np.linspace(-10, 10)
+            plt.plot(l, a * l + b, 'k-')
+
+        l = np.linspace(-10, 10)
+        cols = {1: 'r', -1: 'b'}
+        for x, s in self.X:
+            plt.plot(x[1], x[2], cols[s] + 'o')
+
+        if mispts:
+            for x, s in mispts:
+                plt.plot(x[1], x[2], cols[s] + '.')
+
+        if vec != None:
+            aa, bb = -vec[1] / vec[2], -vec[0] / vec[2]
+            plt.plot(l, aa * l + bb, 'g-', lw=2)
+
+        if save:
+            if not mispts:
+                plt.title('N = %s' % (str(len(self.X))))
+            else:
+                plt.title('N = %s with %s test points' \
+                          % (str(len(self.X)), str(len(mispts))))
+            plt.savefig('p_N%s' % (str(len(self.X))), \
+                        dpi=200, bbox_inches='tight')
+
+        plt.draw()
+        plt.pause(1)
 
 
 def test1():
-    print("### ERSTER TEST MIT 3"
+    print("### ERSTER TEST MIT 2"
           " MERKMALEN ###")
-    train1 = np.array([[2, 6, 1], [7, 4, -1], [7, -2, -1], [7, 3, -1], [9, 6, 1], [3, 6, 1], [7, 1, -1]])
-    p = Perceptron(train_data=train1)
+    train1 = np.array([[2, 11, 1], [7, 4, -1], [7, -2, -1], [9, 3, -1], [9, 6, 1], [3, 9, 1], [3, 1, -1]])
+    p = Perceptron(train_data=train1, test=True)
 
     p.pla(10)
     print(p.weight)
@@ -140,7 +197,7 @@ def test1():
 
 
 def test2():
-    print("### ERSTER TEST MIT 2 MERKMALEN ###")
+    print("### ERSTER TEST MIT 1 MERKMALEN ###")
     
     train2 = np.array([[5, 1], [7, -1], [9, -1], [7, -1], [3, 1], [2, 1], [8, -1]])
     p = Perceptron(train_data=train2)
@@ -162,5 +219,9 @@ def test2():
         print('TEST POCKET FEHLSCHLAG')
 
 
-#test1()
+
+
+test1()
+print('YOKO')
 #test2()
+
