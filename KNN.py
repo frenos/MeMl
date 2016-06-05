@@ -5,6 +5,16 @@ import numpy as np
 from collections import Counter
 
 class NearestNeighbors:
+
+    def __init__(self, otherone = False):
+
+        self.dist_function = self.euclidean_distance
+        if otherone is True:
+            self.dist_function = self.other_distance
+
+
+
+
     def getNeighbors(self, trainingSet, testInstance, k):
         distances = []
         length = len(testInstance) - 1
@@ -14,7 +24,7 @@ class NearestNeighbors:
             k += 1
 
         for x in range(len(trainingSet)):
-            dist = self.euclidean_distance(testInstance, trainingSet[x], length)
+            dist = self.dist_function(testInstance, trainingSet[x], length)
             distances.append((trainingSet[x], dist))
         distances.sort(key=operator.itemgetter(1))
         neighbors = []
@@ -24,6 +34,12 @@ class NearestNeighbors:
         return neighbors
 
     def euclidean_distance(self, instance1, instance2, length):
+        distance = 0
+        for x in range(length):
+            distance += pow((instance1[x] - instance2[x]), 2)
+        return math.sqrt(distance)
+
+    def other_distance(self, instance1, instance2, length):
         distance = 0
         for x in range(length):
             distance += pow((instance1[x] - instance2[x]), 2)
@@ -45,7 +61,7 @@ def test():
     knn = NearestNeighbors()
 
     trainSet = np.array([[2, 11, 1], [7, 4, -1], [7, -2, -1], [9, 3, -1], [9, 6, 1], [3, 9, 1], [3, 1, -1]])
-    testInstance = np.array([7, -4])
+    testInstance = np.array([2, 8])
     k = 3
 
     _class = knn.check(trainSet, testInstance, k)
