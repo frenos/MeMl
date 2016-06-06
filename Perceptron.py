@@ -97,7 +97,7 @@ class Perceptron:
             weight += result * feature
             print('Durchlauf: '+str(it))
             print(weight)
-            self.plot(mispts=self.test_points,vec=weight)
+            self.plot(vec=weight,save=True, name="PLA")
             error = self.classification_error(weight)
 
             if error == 0:
@@ -130,13 +130,19 @@ class Perceptron:
             if new_error < current_error:
                 current_weight = new_weight.copy()
                 current_error = new_error
+                self.plot(vec=new_weight, save=True, name="POCKET")
 
             if current_error == 0:
                 break
 
         self.weight = current_weight.copy()
 
-    def plot(self, mispts=None, vec=None, save=False):
+    def plot(self, mispts=None, vec=None, save=False, name=""):
+        feature_len = len(self.weight,)-1
+        if feature_len != 1 and feature_len != 2:
+            print ("Kann "+feature_len+" Dimensionen nicht visualisieren")
+            return
+
         fig = plt.figure(figsize=(5, 5))
         plt.xlim(-10, 10)
         plt.ylim(-10, 10)
@@ -150,27 +156,38 @@ class Perceptron:
         l = np.linspace(-10, 10)
         cols = {1: 'r', -1: 'b'}
         for x, s in self.X:
-            plt.plot(x[1], x[2], cols[s] + 'o')
+            plt.plot(x[feature_len -1 ],x[feature_len], cols[s] + 'o')
 
         if mispts:
             for x, s in mispts:
-                plt.plot(x[1], x[2], cols[s] + '.')
+                plt.plot(x[feature_len-1],x[feature_len], cols[s] + '.')
 
         if vec != None:
-            aa, bb = -vec[1] / vec[2], -vec[0] / vec[2]
-            plt.plot(l, aa * l + bb, 'g-', lw=2)
+            if feature_len == 2:
+                if vec[2] != 0:
+                    aa, bb = -vec[1] / vec[2], -vec[0] / vec[2]
+                else:
+                    aa, bb = -vec[1] , -vec[0]
+
+            else:
+                if vec[1] != 0:
+                    bb = -vec[0]/vec[1]
+                else:
+                    bb = -vec[0]
+                aa = 0
+
+        plt.plot(l,aa*l+bb, 'g-', lw=2)
 
         if save:
             if not mispts:
-                plt.title('N = %s' % (str(len(self.X))))
+                plt.title('(%s) N = %s' % (name, str(len(self.X))))
             else:
-                plt.title('N = %s with %s test points' \
-                          % (str(len(self.X)), str(len(mispts))))
-            plt.savefig('p_N%s' % (str(len(self.X))), \
-                        dpi=200, bbox_inches='tight')
-
-        plt.draw()
-        plt.pause(1)
+                plt.title('(%s) N = %s with %s test points' \
+                          % (name, str(len(self.X)), str(len(mispts))))
+            plt.savefig('p_N%s_%s.png' % (str(len(self.X)),str(time.time())))
+        else:
+            plt.draw()
+            plt.pause(1)
 
 
 def test1():
@@ -221,7 +238,7 @@ def test2():
 
 
 
-test1()
-print('YOKO')
+#test1()
+#print('YOKO')
 #test2()
 

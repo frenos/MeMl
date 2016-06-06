@@ -6,18 +6,16 @@ from collections import Counter
 
 class NearestNeighbors:
 
-    def __init__(self, otherone = False):
-
+    def __init__(self, otherone = False, traindata=None):
+        self.traindata = traindata
         self.dist_function = self.euclidean_distance
         if otherone is True:
             self.dist_function = self.other_distance
 
 
-
-
-    def getNeighbors(self, trainingSet, testInstance, k):
+    def getNeighbors(self, trainingSet, testInstance, k=3):
         distances = []
-        length = len(testInstance) - 1
+        length = len(testInstance)
 
         if k % 2 == 0:
             print('k should be odd, i will add 1')
@@ -51,11 +49,24 @@ class NearestNeighbors:
         count = Counter(classes)
         return count.most_common()[0][0]
 
-    def check(self, trainingSet, testIntance, k):
+    def check(self, trainingSet, testIntance, k=3):
         _neighbours = self.getNeighbors(trainingSet=trainingSet, testInstance=testIntance, k=k)
         _class = self.classify(neighbours=_neighbours)
         return _class
 
+    def check(self, weight, x, k=3):
+
+        expected_result = x[-1]
+        x = x[:-1]
+
+        _neighbours = self.getNeighbors(trainingSet=self.traindata, testInstance=x, k=k)
+
+        result = self.classify(neighbours=_neighbours)
+
+        if expected_result == result:
+            return True
+
+        return False
 def test():
 
     knn = NearestNeighbors()
@@ -69,4 +80,4 @@ def test():
     print(_class)
 
 
-test()
+#test()
