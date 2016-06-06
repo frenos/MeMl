@@ -67,13 +67,15 @@ class NearestNeighbors:
             return True
 
         return False
+
 def test():
 
-    knn = NearestNeighbors()
+    knn = NearestNeighbors(otherone=True)
 
-    trainSet = np.array([[2, 11, 1], [7, 4, -1], [7, -2, -1], [9, 3, -1], [9, 6, 1], [3, 9, 1], [3, 1, -1]])
-    testInstance = np.array([2, 8])
+    trainSet = np.array([[0.2,0.2,0.2,0.2,0.2, 1], [0.7,0.7,0.7,0.7,0.7, -1], [0.7,0.7,0.7,0.7,0.7,  -1], [0.9,0.9,0.9,0.9,0.9, -1], [0.9,0.9,0.9,0.9,0.9, 1], [0.3,0.3,0.3,0.3,0.3,0.3, 1], [0.3,0.3,0.3,0.3,0.3,0.3, -1]])
+    testInstance = np.array([0.4, 0.4,0.4,0.4,0.4])
     k = 3
+
 
     _class = knn.check(trainSet, testInstance, k)
     print('testInstance has the class: ')
