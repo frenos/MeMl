@@ -65,10 +65,8 @@ class Tree:
                     best_feature = feature
                     divisor = i
 
-                '''
                 if max_entropy == 0:
                     return best_feature, divisor
-                '''
 
         print('best_feature = %d and divisor = %f' %(best_feature, divisor))
         return best_feature, divisor
