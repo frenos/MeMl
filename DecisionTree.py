@@ -68,9 +68,6 @@ class Tree:
                 if max_entropy == 0:
                     return best_feature, divisor
 
-
-        print(max_entropy)
-
         return best_feature, divisor
 
     def generateTree(self, data_set, node):
@@ -97,7 +94,16 @@ class Tree:
 
 
     def _splitData(self, data_set, feature, divisor):
-        return data_set[5:], data_set[:5]
+        left_set = []
+        right_set = []
+
+        for set in data_set:
+            if set[feature] < divisor:
+                left_set.append(set)
+            else:
+                right_set.append(set)
+
+        return np.array(left_set), np.array(right_set)
 
 
     def _min_max(self, data_set, feature):
@@ -137,7 +143,6 @@ class Tree:
 
         feature_vec = data_set[:, feature]
         counter = Counter(feature_vec)
-        print(counter.most_common())
 
         try:
             for x in counter.most_common():
@@ -190,22 +195,33 @@ class Node:
         if self._left_node is None and self._right_node is None:
             return str(self._class)
         else:
-            return "[feature: %f| divisor: %f]" % (self._feature, self._divisor)
+            return "[%d|%0.2f]" % (self._feature, self._divisor)
 
     def print(self):
         if self._left_node is None and self._right_node is None:
             return
         else:
-            print("              [feature: %d| divisor: %0.2f]         " % (self._feature, self._divisor))
-            print("             /                          \                 ")
-            print("          %s                             %s     " % (str(self._left_node), self._right_node))
+            print("              ________[%d|%0.2f]_________" % (self._feature, self._divisor))
+            print("             /                         \                 ")
+            print("            %s                          %s     " % (str(self._left_node), self._right_node))
             self._left_node.print()
             self._right_node.print()
 
+    def check(self, weight, x):
+        expected_result = x[len(x)-1:len(x)][0]
+        x = x[:-1]
+
+        result = self.decide(x)
+
+        if expected_result == result:
+            return True
+
+        return False
+
 def test():
-    tree = Tree()
+    tree = Tree(theta=0.1)
     #trainSet = np.array([[2, 4, 1], [7, 4, -1], [8, 4, -1], [9, 4, -1], [1, 4, 1], [8, 9, 1], [6, 9, -1]])
-    trainSet = np.array([[9, 1, -1], [9, 1, -1], [9, 1, -1], [9, 1, -1], [9, 1, -1], [4, 1, 1], [4, 1, 1], [4, 1, 1], [4, 1, 1], [4, 1, 1]])
+    trainSet = np.array([[9, 2, -1], [9, 2, -1], [9, 2, -1], [9, 1, 1], [9, 1, 1], [4, 1, 1], [4, 1, 1], [4, 1, 1], [4, 1, 1], [4, 1, 1]])
     '''
     for i in range(2):
         print('entropy feature %d = %f' % (i, tree._featureEntropy(trainSet, i)))
@@ -219,9 +235,13 @@ def test():
 
     root = Node()
     tree.generateTree(trainSet, root)
-    print('class of the instance is %d' % root.decide(np.array([4, 1])))
+    print('class of the instance is %d' % root.decide(np.array([5, 1.001])))
     root.print()
 
+    if root.check(None ,x=np.array([5, 1.001, -1])) is True:
+        print('Succes')
+    else:
+        print('Failure')
 
 test()
 
