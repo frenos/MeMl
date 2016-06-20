@@ -1,7 +1,6 @@
 import math
 import numpy as np
 from collections import Counter
-import sys
 
 class Tree:
 
@@ -122,6 +121,24 @@ class Tree:
 
         return min, max
 
+
+    def _entropy(self, data_set):
+        len_feature_vec = len(data_set[0])
+        result_vec = data_set[:, len_feature_vec-1]
+        counter = Counter(result_vec)
+        entropy = 0
+        class_counter = 0
+
+        try:
+            for x in counter.most_common():
+                p = x[1] / len(data_set)
+                entropy += (-1) * p * math.log(p)
+        except ValueError as e:
+            print(e.message)
+
+        return entropy
+
+    ''''
     def _entropy(self, data_set):
         feature_len = len(data_set[0]) - 1
         entropy = 0
@@ -153,7 +170,7 @@ class Tree:
             print(e.message)
 
         return entropy
-
+    '''
 
 class Node:
     def __init__(self):
@@ -219,21 +236,10 @@ class Node:
 
         return False
 
-'''
+
 def test():
-    tree = Tree(theta=0.1)
-    #trainSet = np.array([[2, 4, 1], [7, 4, -1], [8, 4, -1], [9, 4, -1], [1, 4, 1], [8, 9, 1], [6, 9, -1]])
+    tree = Tree(theta=0.250201212)
     trainSet = np.array([[9, 2, -1], [9, 2, -1], [9, 2, -1], [9, 1, -1], [9, 1, -1], [3.5, 1, 1], [4, 1, 1], [4, 1, 1], [4, 1, 1], [4., 1, 1]])
-
-    for i in range(2):
-        print('entropy feature %d = %f' % (i, tree._featureEntropy(trainSet, i)))
-
-    print('entropy feature %d = %f' % (i, tree._entropy(trainSet)))
-
-    print('entropy = %f' % (tree._splitEntropy(trainSet[:4],trainSet[4:])))
-
-    print('best feature = %d and divisor = %d' % tree._splitAttribute(trainSet))
-
 
     root = Node()
     tree.generateTree(trainSet, root)
@@ -246,6 +252,6 @@ def test():
         print('Failure')
 
 test()
-'''
+
 
 
