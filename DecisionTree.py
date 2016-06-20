@@ -138,40 +138,6 @@ class Tree:
 
         return entropy
 
-    ''''
-    def _entropy(self, data_set):
-        feature_len = len(data_set[0]) - 1
-        entropy = 0
-
-        for feature in range(feature_len):
-            entropy += self._featureEntropy(data_set, feature)
-
-        return entropy / feature_len
-
-    def _featureEntropy(self, data_set, feature):
-        entropy = 0
-
-        data_len = len(data_set)
-
-        if data_len == 0:
-            return None
-
-        if data_len == 1:
-            return 0
-
-        feature_vec = data_set[:, feature]
-        counter = Counter(feature_vec)
-
-        try:
-            for x in counter.most_common():
-                p = x[1]/data_len
-                entropy += (-1) * p * math.log(p)
-        except ValueError as e:
-            print(e.message)
-
-        return entropy
-    '''
-
 class Node:
     def __init__(self):
         self._left_node = None
@@ -236,15 +202,42 @@ class Node:
 
         return False
 
+    def get_depth(self):
+        left = 0
+        right = 0
+
+        if self._left_node is not None:
+            left = self._left_node.get_depth()
+        if self._right_node is not None:
+            right = self._right_node.get_depth()
+
+        if left < right:
+            return 1+right
+        else:
+            return 1+left
+
+    def count_nodes(self):
+        left = 0
+        right = 0
+
+        if self._left_node is not None:
+            left = self._left_node.count_nodes()
+        if self._right_node is not None:
+            right = self._right_node.count_nodes()
+
+        return 1+left+right
 
 def test():
     tree = Tree(theta=0.0001)
-    trainSet = np.array([[9, 2, -1], [9, 2, -1], [9, 2, -1], [9, 1, -1], [9, 1, -1], [3.5, 1, 1], [4, 1, 1], [4, 1, 1], [4, 1, 1], [4., 1, 1]])
+    trainSet = np.array([[9, 2, -1], [9, 2, -1], [9, 2, -1], [9, 3, 1], [9, 3, 1], [3.5, 1, 1], [4, 1, 1], [4, 1, 1], [4, 1, 1], [4., 1, 1]])
 
     root = Node()
     tree.generateTree(trainSet, root)
     print('class of the instance is %d' % root.decide(np.array([5, 1.001])))
     root.print_tree()
+
+    print('depth %d' %root.get_depth())
+    print('count nodes %d' % root.count_nodes())
 
     if root.check(None ,x=np.array([5, 1.001, -1])) is True:
         print('Succes')
