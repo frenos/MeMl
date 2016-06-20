@@ -215,15 +215,15 @@ class Node:
         else:
             return "[%d|%0.2f]" % (self._feature, self._divisor)
 
-    def print(self):
+    def print_tree(self):
         if self._left_node is None and self._right_node is None:
             return
         else:
             print("              ________[%d|%0.2f]_________" % (self._feature, self._divisor))
             print("             /                         \                 ")
             print("            %s                          %s     " % (str(self._left_node), self._right_node))
-            self._left_node.print()
-            self._right_node.print()
+            self._left_node.print_tree()
+            self._right_node.print_tree()
 
     def check(self, weight, x):
         expected_result = x[len(x)-1:len(x)][0]
@@ -238,13 +238,13 @@ class Node:
 
 
 def test():
-    tree = Tree(theta=0.250201212)
+    tree = Tree(theta=0.0001)
     trainSet = np.array([[9, 2, -1], [9, 2, -1], [9, 2, -1], [9, 1, -1], [9, 1, -1], [3.5, 1, 1], [4, 1, 1], [4, 1, 1], [4, 1, 1], [4., 1, 1]])
 
     root = Node()
     tree.generateTree(trainSet, root)
     print('class of the instance is %d' % root.decide(np.array([5, 1.001])))
-    root.print()
+    root.print_tree()
 
     if root.check(None ,x=np.array([5, 1.001, -1])) is True:
         print('Succes')
