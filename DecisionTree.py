@@ -227,6 +227,7 @@ class Node:
 
         return 1+left+right
 
+'''
 def test():
     tree = Tree(theta=0.0001)
     trainSet = np.array([[9, 2, -1], [9, 2, -1], [9, 2, -1], [9, 3, 1], [9, 3, 1], [3.5, 1, 1], [4, 1, 1], [4, 1, 1], [4, 1, 1], [4., 1, 1]])
@@ -245,6 +246,6 @@ def test():
         print('Failure')
 
 test()
-
+'''
 
 
