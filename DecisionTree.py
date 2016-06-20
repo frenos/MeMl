@@ -65,9 +65,12 @@ class Tree:
                     best_feature = feature
                     divisor = i
 
+                '''
                 if max_entropy == 0:
                     return best_feature, divisor
+                '''
 
+        print('best_feature = %d and divisor = %f' %(best_feature, divisor))
         return best_feature, divisor
 
     def generateTree(self, data_set, node):
@@ -218,11 +221,12 @@ class Node:
 
         return False
 
+'''
 def test():
     tree = Tree(theta=0.1)
     #trainSet = np.array([[2, 4, 1], [7, 4, -1], [8, 4, -1], [9, 4, -1], [1, 4, 1], [8, 9, 1], [6, 9, -1]])
-    trainSet = np.array([[9, 2, -1], [9, 2, -1], [9, 2, -1], [9, 1, 1], [9, 1, 1], [4, 1, 1], [4, 1, 1], [4, 1, 1], [4, 1, 1], [4, 1, 1]])
-    '''
+    trainSet = np.array([[9, 2, -1], [9, 2, -1], [9, 2, -1], [9, 1, -1], [9, 1, -1], [3.5, 1, 1], [4, 1, 1], [4, 1, 1], [4, 1, 1], [4., 1, 1]])
+
     for i in range(2):
         print('entropy feature %d = %f' % (i, tree._featureEntropy(trainSet, i)))
 
@@ -231,7 +235,7 @@ def test():
     print('entropy = %f' % (tree._splitEntropy(trainSet[:4],trainSet[4:])))
 
     print('best feature = %d and divisor = %d' % tree._splitAttribute(trainSet))
-    '''
+
 
     root = Node()
     tree.generateTree(trainSet, root)
@@ -244,5 +248,6 @@ def test():
         print('Failure')
 
 test()
+'''
 
 
